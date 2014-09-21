@@ -1,0 +1,37 @@
+.Dd $Mdocdate$
+.Dt TPMRND 1
+.Os Linux
+.Sh NAME
+.Nm tpmrnd
+.Nd daemon that periodically writes entropy from the TPM to the host
+.Sh SYNOPSIS
+.Nm
+.Op f
+.Op s Ar seconds
+.Sh DESCRIPTION
+.Nm
+is a daemon that writes entropy from the TPM to the host once per day. It
+supports the following flags:
+.Bl -tag -width .Ds
+.It Fl f
+Run in the foreground (do not daemonise).
+.It Fl s Ar seconds
+Specify the update period in seconds.
+.El
+Messages are written to syslog if
+.Nm
+is running as a daemon, or to the console if it is running in the
+foreground.
+.Sh EXIT STATUS
+.Ex -std
+.Sh STANDARDS
+.Nm
+conforms to
+.St ansiC .
+.Sh AUTHORS
+.Nm
+was written by
+.An Kyle Isom Aq Mt kyle@tyrfingr.is .
+.Sh CAVEATS
+The program only wakes up once per minute, so the delay should be
+minute-aligned.
