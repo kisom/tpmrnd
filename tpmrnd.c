@@ -58,8 +58,8 @@
 				}
 
 
-const size_t	RAND_CHUNK = 32;
-static time_t	update_delay = 86400; /* one day */
+const size_t	RAND_CHUNK = 256;
+static time_t	update_delay = 21600; /* six hours */
 static int	daemonised = 0;
 
 
