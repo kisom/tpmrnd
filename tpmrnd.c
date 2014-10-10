@@ -58,8 +58,8 @@
 				}
 
 
-const size_t	RAND_CHUNK = 256;
 static time_t	update_delay = 21600; /* six hours */
+static size_t	rand_chunk = 256;
 static int	daemonised = 0;
 
 
@@ -127,7 +127,7 @@ write_rand(void)
 	uint8_t	*data = NULL;
 	FILE	*devrand = NULL;
 
-	data = tpm_rand(RAND_CHUNK);
+	data = tpm_rand(rand_chunk);
 	if (NULL == data) {
 		goto exit;
 	}
@@ -139,14 +139,14 @@ write_rand(void)
 		goto exit;
 	}
 
-	if (RAND_CHUNK != fwrite(data, sizeof(data[0]), RAND_CHUNK, devrand)) {
+	if (rand_chunk != fwrite(data, sizeof(data[0]), rand_chunk, devrand)) {
 		ERROR_OUT("failed to write full random chunk to /dev/random")
 		goto exit;
 	}
 
 	res = RETURN_SUCCESS;
 	PRINT_MSG1("wrote %lu byte random chunk to /dev/random",
-	    (long unsigned)RAND_CHUNK)
+	    (long unsigned)rand_chunk)
 
 exit:
 	free(data);
@@ -196,6 +196,24 @@ shutdown(int flags)
 
 
 /*
+ * usage prints a short usage message.
+ */
+static void
+usage(const char *progname)
+{
+	fprintf(stderr,
+	    "Usage: %s [-b bytes] [-fh] [-s seconds]\n", progname);
+	fprintf(stderr,
+	    "\t-b bytes	Set the number of bytes to be written\n");
+	fprintf(stderr,
+	    "\t-f		Run in the foreground\n");
+	fprintf(stderr,
+	    "\t-h		Print this help message\n");
+	fprintf(stderr,
+	    "\t-s seconds	Set the update delay in seconds\n");
+}
+
+/*
  * tpmrnd periodically writes randomness from the TPM to /dev/random.
  */
 int
@@ -205,11 +223,17 @@ main(int argc, char *argv[])
 	int	opt;
 	int	should_daemonise = 1;
 
-	while ((opt = getopt(argc, argv, "fs:")) != -1) {
+	while ((opt = getopt(argc, argv, "b:fhs:")) != -1) {
 		switch (opt) {
+		case 'b':
+			rand_chunk = (size_t)strtol(optarg, NULL, 0);
+			break;
 		case 'f':
 			should_daemonise = 0;
 			break;
+		case 'h':
+			usage(argv[0]);
+			return EXIT_SUCCESS;
 		case 's':
 			update_delay = (time_t)strtol(optarg, NULL, 0);
 			break;
@@ -235,3 +259,4 @@ main(int argc, char *argv[])
 	PRINT_MSG("starting up");
 	run();
 }
+
