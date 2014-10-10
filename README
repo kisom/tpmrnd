@@ -1,13 +1,46 @@
 tpmrnd
 
-tpmrnd is a daemon that writes entropy from the TPM to the host once
-per day. It supports the following flags:
+tpmrnd is a daemon that periodically writes entropy from the TPM to
+the host PRNG. It supports the following flags:
+
+	-b bytes	Select the size of the chunk of random data.
+			The default is 256 bytes.
 
 	-f		Run in the foreground (do not daemonise).
 
-	-s seconds	Specify the update period in seconds.
+	-h		Print a short usage message.
+
+	-s seconds	Specify the update period in seconds. Default
+	                is 21600 seconds (six hours).
 
 Messages are written to syslog if tpmrnd is running as a daemon, or to
-the console if it is running in the fore‐ ground.
+the console if it is running in the foreground.
 
-tpmrnd is released under an ISC license.
+
+BUILDING AND INSTALLATION
+
+```
+make && sudo make install
+```
+
+This installs the `tpmrnd` binary to `/usr/local/bin/tpmrnd` and the
+manual page to `/usr/local/share/man/man1/tpmrnd.1`.
+
+
+LICENSE
+
+tpmrnd is released under an ISC license:
+
+Copyright (c) 2014 Kyle Isom <kyle@tyrfingr.is>
+
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above 
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. 
